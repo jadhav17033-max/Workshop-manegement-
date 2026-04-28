@@ -1,49 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Workshop Dashboard</title>
-<style>
-body { font-family: Arial; background:#0f172a; color:white; text-align:center; }
-.card { background:#1e293b; padding:20px; margin:20px; border-radius:12px; }
-img { border-radius:10px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Management Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root { --p: #2563eb; --bg: #0f172a; --card: #1e293b; --accent: #38bdf8; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); color: white; margin: 0; padding: 20px; text-align: center; }
+        .container { max-width: 900px; margin: auto; }
+        header h1 { color: var(--accent); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 30px; }
+        
+        .veh-card { 
+            background: var(--card); border-radius: 20px; padding: 25px; margin-bottom: 30px;
+            border-left: 8px solid var(--p); box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            display: flex; flex-wrap: wrap; gap: 20px; align-items: center; text-align: left;
+        }
+        
+        .veh-img { width: 280px; height: 190px; object-fit: cover; border-radius: 12px; border: 2px solid #334155; }
+        .details { flex: 1; min-width: 280px; }
+        .veh-title { font-size: 24px; font-weight: 600; color: #f8fafc; margin-bottom: 10px; border-bottom: 1px solid #334155; }
+        
+        .info { margin: 8px 0; font-size: 14px; color: #94a3b8; }
+        .info b { color: #f1f5f9; display: block; font-size: 16px; }
+        
+        .defect-box { background: rgba(239, 68, 68, 0.1); padding: 15px; border-radius: 10px; border: 1px solid #ef4444; margin-top: 15px; }
+        .qr-section { text-align: center; background: white; padding: 12px; border-radius: 15px; min-width: 120px; }
+        .qr-section p { color: #0f172a; font-size: 10px; margin: 8px 0 0; font-weight: bold; }
+
+        @media (max-width: 600px) { .veh-card { flex-direction: column; text-align: center; } .veh-img { width: 100%; } }
+    </style>
 </head>
-
 <body>
-<h1>🚗 Workshop Dashboard</h1>
 
-<div class="card" id="veh916">
-<h2>Vehicle 916 - Armado</h2>
-<img src="veh916.png" width="300"/>
-<p>Last Service: 26 July 2026</p>
-<p>Next Service: <span id="next916"></span></p>
-<p>Defects: Transmission software update, Oil change</p>
-<img src="qr916.png" width="150"/>
-</div>
+<div class="container">
+    <header><h1>🛠️ Workshop Dashboard</h1></header>
 
-<div class="card" id="veh917">
-<h2>Vehicle 917</h2>
-<p>Last Service: 12 July 2026</p>
-<p>Next Service: <span id="next917"></span></p>
-<p>Defects: Oil change, Battery fitted</p>
-<img src="qr917.png" width="150"/>
+    <div class="veh-card" id="veh916">
+        <img src="916.jpg" class="veh-img" alt="916 Armado">
+        <div class="details">
+            <div class="veh-title">VEH NO: 916 (Armado)</div>
+            <div class="info">Last Service: <b class="last-service">2026-07-26</b></div>
+            <div class="info">Next Service: <b class="next-service" style="color: #fbbf24;">...</b></div>
+            <div class="defect-box"><strong>LAST DEFECTS:</strong><p>(1) Transmission software update<br>(2) Transmission oil change</p></div>
+        </div>
+        <div class="qr-section"><div id="qr916"></div><p>SCAN FOR 916</p></div>
+    </div>
+
+    <div class="veh-card" id="veh917">
+        <img src="917.jpg" class="veh-img" alt="917 Photo">
+        <div class="details">
+            <div class="veh-title">VEH NO: 917</div>
+            <div class="info">Last Service: <b class="last-service">2026-07-12</b></div>
+            <div class="info">Next Service: <b class="next-service" style="color: #fbbf24;">...</b></div>
+            <div class="defect-box"><strong>LAST DEFECTS:</strong><p>(1) Transmission oil change<br>(2) Battery new fitted</p></div>
+        </div>
+        <div class="qr-section"><div id="qr917"></div><p>SCAN FOR 917</p></div>
+    </div>
 </div>
 
 <script>
-function addOneYear(dateStr){
- let d=new Date(dateStr);
- d.setFullYear(d.getFullYear()+1);
- return d.toDateString();
-}
-document.getElementById("next916").innerText=addOneYear("July 26, 2026");
-document.getElementById("next917").innerText=addOneYear("July 12, 2026");
+    document.querySelectorAll('.veh-card').forEach(card => {
+        // Automatic 1 Year Date
+        let lastDate = new Date(card.querySelector('.last-service').innerText);
+        lastDate.setFullYear(lastDate.getFullYear() + 1);
+        card.querySelector('.next-service').innerText = lastDate.toDateString();
 
-window.onload=function(){
- let h=window.location.hash;
- if(h){ document.querySelector(h).scrollIntoView(); }
-}
+        // Automatic QR Generator
+        let vehId = card.id;
+        let qrContainer = document.getElementById("qr" + vehId.replace('veh',''));
+        new QRCode(qrContainer, {
+            text: window.location.href.split('#')[0] + "#" + vehId,
+            width: 100, height: 100
+        });
+    });
 </script>
-
 </body>
 </html>
