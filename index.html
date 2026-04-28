@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Workshop Dashboard</title>
+<style>
+body { font-family: Arial; background:#0f172a; color:white; text-align:center; }
+.card { background:#1e293b; padding:20px; margin:20px; border-radius:12px; }
+img { border-radius:10px; }
+</style>
+</head>
+
+<body>
+<h1>🚗 Workshop Dashboard</h1>
+
+<div class="card" id="veh916">
+<h2>Vehicle 916 - Armado</h2>
+<img src="veh916.png" width="300"/>
+<p>Last Service: 26 July 2026</p>
+<p>Next Service: <span id="next916"></span></p>
+<p>Defects: Transmission software update, Oil change</p>
+<img src="qr916.png" width="150"/>
+</div>
+
+<div class="card" id="veh917">
+<h2>Vehicle 917</h2>
+<p>Last Service: 12 July 2026</p>
+<p>Next Service: <span id="next917"></span></p>
+<p>Defects: Oil change, Battery fitted</p>
+<img src="qr917.png" width="150"/>
+</div>
+
+<script>
+function addOneYear(dateStr){
+ let d=new Date(dateStr);
+ d.setFullYear(d.getFullYear()+1);
+ return d.toDateString();
+}
+document.getElementById("next916").innerText=addOneYear("July 26, 2026");
+document.getElementById("next917").innerText=addOneYear("July 12, 2026");
+
+window.onload=function(){
+ let h=window.location.hash;
+ if(h){ document.querySelector(h).scrollIntoView(); }
+}
+</script>
+
+</body>
+</html>
